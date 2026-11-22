@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ActiveView } from "./ActiveView";
 import { SourceSelector } from "./SourceSelector";
 
 const views = ["Professor", "Whiteboard", "Slides"];
@@ -12,7 +13,7 @@ export function Classroom() {
       <h2>AMLOS Classroom</h2>
       <p>Team-created sample application</p>
       <SourceSelector views={views} selected={view} onSelect={setView} />
-      <p role="status">{view} · Simulated source</p>
+      <ActiveView view={view} />
     </section>
   );
 }
