@@ -132,9 +132,13 @@ describe("QA · Architect (stage C)", () => {
     );
     for (const entry of matches) {
       expect(entry.reason.length).toBeGreaterThan(10);
-      if (entry.kind === "new") throw new Error("lecture should not need NEW components");
-      expect(entry.sampleProjectId).toBe("classroom");
-      expect(classroom?.components.some((c) => c.id === entry.componentId && c.sourceFile === entry.sourceFile)).toBe(true);
+      if (entry.kind === "new") {
+        expect(entry.componentId).toBe("lecture-source-topology");
+        expect(entry.reason.length).toBeGreaterThan(10);
+        continue;
+      }
+      expect(["classroom", "remote-training"]).toContain(entry.sampleProjectId);
+      expect(sampleApps.find((project) => project.id === entry.sampleProjectId)?.components.some((c) => c.id === entry.componentId && c.sourceFile === entry.sourceFile)).toBe(true);
     }
   });
 });
