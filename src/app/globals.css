@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canvas: #09090b;
+  --color-surface: #121215;
+  --color-surface-raised: #1b1b1f;
+  --color-line: #2d2d32;
+  --color-primary: #e21c2a;
+  --color-primary-hover: #ff3442;
+  --color-text: #f5f5f7;
+  --color-muted: #a4a4ab;
+  --color-dim: #73737b;
+}
+
+:root { color-scheme: dark; }
