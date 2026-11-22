@@ -1,13 +1,13 @@
 /**
  * Viewport, keyboard and motion checks (qa-checklist §13–15). Runs on every project in playwright.config.ts.
- * STATUS: prepared and never executed. It depends on the proposed test IDs in ./selectors.ts.
+ * Targets the guided /studio UI at each configured viewport.
  */
 import { expect, test } from "@playwright/test";
 import { applyLabChange, expectNoHorizontalOverflow, reachLecturePreview, shot } from "./helpers";
 import { tid, viewTiles } from "./selectors";
 
 test("no horizontal overflow across the demo stages", async ({ page }, testInfo) => {
-  await page.goto("/");
+  await page.goto("/studio");
   await expectNoHorizontalOverflow(page, "library");
   await shot(page, testInfo, "r-library");
 
@@ -23,6 +23,7 @@ test("no horizontal overflow across the demo stages", async ({ page }, testInfo)
 
   await page.getByTestId(tid.xrayToggle).click();
   await page.getByTestId(tid.xrayTarget("workbench-view")).click();
+  await page.getByTestId(tid.inspector).scrollIntoViewIfNeeded();
   await expect(page.getByTestId(tid.inspector)).toBeInViewport();
   await expectNoHorizontalOverflow(page, "xray-inspector");
   await page.keyboard.press("Escape");
@@ -53,7 +54,7 @@ test("touch targets on primary demo controls are at least 44×44 on mobile", asy
 
 test("Library → Extraction is keyboard operable", async ({ page, isMobile }) => {
   test.skip(isMobile, "keyboard check on desktop projects");
-  await page.goto("/");
+  await page.goto("/studio");
   const analyze = page.getByTestId(tid.analyzeButton("classroom"));
   // Tab until the Analyze control has focus (bounded, so it can't loop forever).
   for (let i = 0; i < 40 && !(await analyze.evaluate((el) => el === document.activeElement)); i++) {
@@ -66,6 +67,7 @@ test("Library → Extraction is keyboard operable", async ({ page, isMobile }) =
 
 test("reduced motion: state changes are immediate and complete", async ({ page }, testInfo) => {
   test.skip(!testInfo.project.name.includes("reduced-motion"), "reduced-motion project only");
+  await expect.poll(() => page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches)).toBe(true);
   await reachLecturePreview(page);
   await page.getByTestId(tid.roleSwitch("student")).click();
   await applyLabChange(page);
@@ -75,7 +77,7 @@ test("reduced motion: state changes are immediate and complete", async ({ page }
     document.getAnimations().filter((a) => {
       const timing = a.effect?.getComputedTiming();
       return typeof timing?.duration === "number" && timing.duration > 350;
-    }).length,
+    }).map(a => ({ target: (a.effect as KeyframeEffect).target?.outerHTML.slice(0, 200), timing: a.effect?.getComputedTiming() })),
   );
-  expect(longAnimations, "animations longer than 350ms under reduced motion").toBe(0);
+  expect(longAnimations, "animations longer than 350ms under reduced motion").toEqual([]);
 });

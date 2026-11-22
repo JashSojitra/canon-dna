@@ -1,0 +1,191 @@
+﻿.landing { --paper:#eeece6; }
+.landing :global(.cinema-hero) { grid-template-columns:1fr 1.05fr; gap:38px; min-height:760px; }
+.landing :global(.cinema-copy h1) { font-size:clamp(54px,5.2vw,82px); line-height:1.04; letter-spacing:-.065em; }
+.landing :global(.cinema-copy h1 span) { color:#99989e; }
+.landing :global(.hero-description) { font-size:18px; max-width:480px; }
+.landing :global(.optic-stage) { min-height:520px; perspective:1100px; }
+.landing :global(.optic-topology) { height:225px; align-items:start; }
+.landing :global(.optic-monitor) { position:relative; z-index:2; width:90%; margin-top:-20px; margin-left:8%; transform:rotateY(-13deg) rotateX(5deg) rotateZ(-4deg); box-shadow:0 35px 55px #0009,8px 8px 0 #33333c; border-color:#71717a; }
+.landing :global(.optic-outputs) { position:relative; z-index:3; transform:rotate(3deg); }
+.landing :global(.camera-hardware) { box-shadow:0 12px 20px #0009; }
+.landing :global(.process-design) { background:var(--paper); color:#222226; padding:65px 45px; margin:30px -5px 0; border-radius:4px; }
+.landing :global(.process-design .editorial-heading>p:last-of-type) { color:#55545c; }
+.landing :global(.request-paper) { box-shadow:9px 12px 0 #c9c4bc; background:#faf9f5; }
+.landingWorkshop { padding:95px 0; }
+.landingWorkshop>div { margin-bottom:35px; }
+.workshop { display:grid; grid-template-columns:235px minmax(0,1fr); background:#eeece6; color:#242429; border-radius:12px; overflow:hidden; }
+.workshopNav { padding:20px 12px; background:#dedbd4; display:flex; flex-direction:column; gap:6px; }
+.workshopNav button { border:0; background:transparent; color:#4f4c4b; padding:15px 12px; display:flex; align-items:center; gap:12px; text-align:left; border-radius:7px; min-height:64px; font-size:15px; }
+.workshopNav button[aria-pressed=true] { background:#fcfbf7; color:#17171b; box-shadow:0 4px 14px #2424240a; }
+.workshopNav button small { display:block; color:#6a6663; font-size:11px; margin-top:5px; }
+.navSketch { font-size:21px; color:#ae2530; width:38px; flex-shrink:0; }
+.workshopBody { padding:32px; min-width:0; }
+.workshopTitle>span,.comparison article>span,.topology header>span,.topologyInspector span { font-size:11px; letter-spacing:.1em; color:#716c68; font-weight:650; }
+.workshopTitle h2 { font-size:34px; letter-spacing:-1.2px; margin:12px 0; }
+.workshopTitle>p { font-size:18px; line-height:1.55; max-width:770px; }
+.comparison { display:grid; grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr); align-items:center; gap:16px; margin:30px 0; }
+.comparison article { min-width:0; }
+.comparison article>span { display:block; font-size:10px; margin-bottom:12px; }
+.compareArrow { color:#ab2531; }
+.selectorExample,.statusExample,.composedExample,.hardwareExample { background:#faf9f5; border-radius:7px; padding:12px; min-height:190px; box-shadow:0 6px 18px #29292909; }
+.exampleFeed { height:125px; overflow:hidden; border-radius:4px; }
+.exampleFeed svg { width:100%; height:100%; }
+.selectorExample nav { display:flex; flex-wrap:wrap; gap:3px; margin-top:8px; }
+.selectorExample button { flex:1; font-size:11px; min-height:44px; padding:5px; border:1px solid #d1cdc4; background:#eeeae1; color:#393535; border-radius:4px; }
+.selectorExample button[aria-pressed=true] { background:#27272c; color:#fff; }
+.statusExample>svg { width:100%; height:130px; }
+.statusExample>p { background:#26262b; color:white; border-radius:4px; padding:10px; font-size:13px; }
+.hardwareExample { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; text-align:center; }
+.hardwareExample>svg { width:48px; height:48px; color:#9b2831; }
+.hardwareExample p { font-size:13px; color:#625e5b; }
+.composedExample>svg { width:100%; height:130px; }
+.composedExample>div { display:flex; gap:6px; }
+.composedExample>div svg { width:0; flex:1; height:45px; }
+.composedExample strong { display:block; font-size:12px; margin:6px 0; }
+.workshopFacts { display:grid; grid-template-columns:1fr 1fr; gap:30px; border-top:1px solid #29292925; padding-top:22px; }
+.workshopFacts h3,.topologyInspector h3 { font-size:15px; margin-bottom:9px; }
+.workshopFacts p { font-size:14px; color:#5e5955; line-height:1.6; }
+.technical { margin:20px 0; font-size:14px; line-height:1.7; }
+.technical summary { cursor:pointer; min-height:44px; padding:10px 0; }
+.technical code { display:block; overflow-wrap:anywhere; font-size:13px; }
+.workshop .technical { border-top:1px solid #29292925; color:#625e5b; margin-bottom:0; }
+.topology { background:#efede7; color:#29282c; padding:38px; border-radius:12px; margin-bottom:25px; }
+.topology header h2 { font-size:37px; letter-spacing:-1.4px; margin:12px 0; line-height:1.1; }
+.topology header p { font-size:12px; color:#8e2830; }
+.topologyGraph { display:grid; grid-template-columns:minmax(0,1.2fr) 50px minmax(220px,.8fr); align-items:center; margin:35px 0; gap:14px; }
+.inputColumn>span { font-size:11px; letter-spacing:.12em; color:#78716b; }
+.sourceRoute { padding:16px 0; border-bottom:1px solid #29292920; position:relative; }
+.sourceRoute>button { display:grid; grid-template-columns:30px 1fr; gap:5px 8px; border:0; background:transparent; text-align:left; color:#29282c; min-height:48px; width:100%; padding:7px; border-radius:5px; }
+.sourceRoute>button svg { grid-row:1/3; align-self:center; }
+.sourceRoute strong { font-size:17px; }
+.sourceRoute small { color:#746f69; font-size:12px; }
+.routeViews { display:flex; gap:10px; padding:10px 0 0 38px; }
+.routeViews button { flex:1; min-width:0; padding:0; background:#fffaf1; border:1px solid #ccc7bc; color:#383435; border-radius:5px; overflow:hidden; text-align:left; }
+.routeViews svg { width:100%; height:auto; display:block; }
+.routeViews span { display:block; padding:8px; font-size:14px; }
+.flowJoin { display:grid; place-items:center; font-size:36px; color:#b82b36; height:70%; border-left:1px solid #bd8a86; border-radius:0 0 0 30px; }
+.deliveryColumn { display:grid; gap:18px; }
+.deliveryColumn>button { position:relative; display:flex; align-items:center; gap:14px; min-height:80px; text-align:left; background:#faf9f5; border:1px solid #d2cdc5; border-radius:8px; padding:18px; color:#29282c; }
+.deliveryColumn>button:after { content:'↓'; position:absolute; bottom:-22px; left:50%; color:#b82b36; }
+.deliveryColumn strong { font-size:20px; display:block; }
+.deliveryColumn small { display:block; font-size:13px; margin-top:6px; color:#746f69; }
+.topology button[aria-pressed=true] { outline:2px solid #b82b36; outline-offset:2px; }
+.studentNode { padding:10px; background:#29282c; color:#fff; border-radius:8px; }
+.studentNode svg { width:100%; height:auto; border-radius:4px; }
+.studentNode strong,.studentNode small { display:block; padding:6px; }
+.studentNode strong { font-size:17px; }
+.studentNode small { font-size:12px; color:#d1ccc6; }
+.topologyInspector { background:#e1ded6; display:grid; grid-template-columns:1fr 1fr; gap:35px; padding:25px; border-radius:6px; }
+.topologyInspector p { font-size:14px; color:#5b5651; line-height:1.65; }
+.topologyInspector h3 { margin-top:8px; }
+.mappingDetails { display:flex; flex-wrap:wrap; gap:14px; padding-top:18px; font-size:12px; }
+.mappingDetails details { flex:1; min-width:130px; }
+.mappingDetails summary { min-height:44px; cursor:pointer; }
+.mappingDetails button { min-height:44px; color:#29282c; background:#f9f6ef; border:1px solid #d1cbc1; padding:8px; margin-top:8px; }
+.topology :focus-visible,.workshop :focus-visible { outline:2px solid #b82b36; outline-offset:3px; }
+.studio :global(.blueprint-layout) { display:block; }
+.studio :global(.blueprint-layout>.approval-panel) { margin-top:26px; position:static; display:grid; grid-template-columns:1fr 1fr; gap:0 35px; background:#19191d; padding:32px; }
+.studio :global(.approval-panel>div) { grid-column:2; grid-row:1/7; }
+.studio :global(.approval-panel>.button) { max-width:100%; }
+.studio :global(.detail-panel) { background:transparent; border:0; border-bottom:1px solid #fff2; padding:15px 0; }
+.studio :global(.detail-panel summary) { min-height:44px; cursor:pointer; font-size:17px; }
+.studio :global(.page-heading) { margin-bottom:25px; }
+.studio :global(.customer-app) { background:#eeece6; padding:24px; }
+.studio :global(.main-feed) { aspect-ratio:16/8; }
+.studio :global(.source-selector .feed-art) { width:70px; height:45px; }
+.studio :global(.source-selector b),.studio :global(.view-count),.studio :global(.viewer-actions>button),.studio :global(.preview-source-rail) { font-size:14px; }
+.studio :global(.source-selector small) { font-size:10px; }
+.studio :global(.viewer-actions>button) { min-height:44px; }
+.studio :global(.preview-and-inspector) { align-items:stretch; }
+.studio :global(.xray-inspection) { width:340px; }
+.studio :global(.xray-active .customer-app) { min-width:0; }
+.studio :global(.generation-film) { padding:25px; border:0; background:#19191e; }
+.studio :global(.generation-acts) { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+.assembly { display:grid; grid-template-columns:.65fr 1.35fr; gap:35px; margin-top:26px; }
+.assembly>aside { background:#eeece6; color:#28262a; padding:28px; border-radius:7px; }
+.assembly>aside>span { font-size:11px; letter-spacing:.12em; color:#746c68; }
+.assembly h2 { font-size:28px; letter-spacing:-1px; margin:16px 0; }
+.assembly>aside>p { font-size:17px; line-height:1.6; }
+.parsedFacts { margin-top:30px; border-top:1px solid #2223; padding-top:20px; font-size:14px; }
+.parsedFacts p { padding-top:14px; }
+.assemblyParts { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.assemblyParts article { min-width:0; background:#27272e; padding:12px; border-radius:7px; }
+.partArt { height:100px; overflow:hidden; margin-bottom:14px; border-radius:4px; }
+.partArt svg { width:100%; height:100%; }
+.assemblyParts small { color:#d9aaa9; font-size:11px; }
+.assemblyParts h3 { font-size:17px; margin:8px 0; }
+.assemblyParts code { font-size:11px; overflow-wrap:anywhere; display:block; color:#bcb9c0; }
+.assemblyViewer>svg { width:100%; height:auto; border-radius:6px; }
+.assemblyViewer>div { display:flex; gap:10px; margin-top:10px; }
+.assemblyViewer>div svg { width:0; flex:1; height:auto; }
+@media(max-width:1100px) { .workshop { grid-template-columns:190px minmax(0,1fr); } .workshopBody { padding:24px; } .comparison { gap:8px; grid-template-columns:minmax(0,1fr) 20px minmax(0,1fr); } .assembly { gap:20px; } }
+@media(max-width:900px) { .landing :global(.cinema-hero) { grid-template-columns:1fr; } .landing :global(.optic-monitor) { max-width:560px; margin-inline:auto; } .studio :global(.xray-inspection) { width:100%; } .workshop { grid-template-columns:1fr; } .workshopNav { flex-direction:row; flex-wrap:wrap; } .workshopNav button { flex:1 1 170px; } .topology { padding:26px; } .assembly { grid-template-columns:1fr; } .assembly>aside { display:grid; grid-template-columns:1fr 1fr; gap:15px; } .parsedFacts { grid-column:2; grid-row:1/4; margin:0; padding:0; border:0; } }
+@media(max-width:600px) { .landing :global(.cinema-copy h1) { font-size:53px; } .landing :global(.optic-stage) { min-height:490px; } .landing :global(.optic-monitor) { margin:12px 0 0; width:100%; transform:none; } .landing :global(.process-design) { padding:30px 20px; } .workshopBody { padding:22px 18px; } .workshopNav { padding:10px; gap:2px; } .workshopNav button { flex-basis:125px; padding:10px 7px; font-size:13px; } .navSketch { width:25px; font-size:16px; } .workshopTitle h2 { font-size:28px; } .workshopTitle>p { font-size:16px; } .comparison { grid-template-columns:1fr; gap:18px; } .compareArrow { transform:rotate(90deg); margin:auto; } .workshopFacts,.topologyInspector { grid-template-columns:1fr; gap:20px; } .topology { padding:24px 18px; } .topology header h2 { font-size:30px; } .topologyGraph { grid-template-columns:1fr; gap:20px; } .flowJoin { border:0; transform:rotate(90deg); height:35px; } .deliveryColumn { grid-template-columns:1fr; } .routeViews svg { max-height:105px; } .topologyInspector { padding:18px; } .studio :global(.blueprint-layout>.approval-panel) { display:block; padding:24px; } .studio :global(.main-feed) { aspect-ratio:16/11; } .studio :global(.source-selector .feed-art) { width:50px; height:35px; } .studio :global(.source-selector b),.studio :global(.view-count),.studio :global(.viewer-actions>button) { font-size:12px; } .studio :global(.view-count) { max-width:140px; } .studio :global(.viewer-actions) { flex-wrap:wrap; justify-content:flex-end; } .studio :global(.source-selector small) { font-size:8px; } .studio :global(.preview-source-rail) { font-size:12px; } .studio :global(.customer-app) { padding:14px; } .studio :global(.rules-badge) { font-size:10px; } .studio :global(.prompt-panel .section-heading) { flex-wrap:wrap; } .assembly>aside { display:block; } .parsedFacts { margin-top:20px; } .assemblyParts { grid-template-columns:1fr; } .studio :global(.generation-film) { padding:16px; } .landingWorkshop { padding:65px 0; } }
+@media(prefers-reduced-motion:reduce) { .landing :global(.optic-monitor),.landing :global(.optic-outputs) { transform:none; } }
+/* Final V5 review adjustments: stable targets, readable routes and replay controls. */
+.originLine { display:block; font-size:13px; color:#756f68; margin-bottom:20px; }
+.changeHeading { font-size:13px; margin-bottom:6px; color:#756f68; }
+.routeViews svg { height:95px; width:100%; object-fit:cover; }
+.topologyGraph { margin:26px 0; }
+.flowJoin { width:100%; height:100%; min-height:380px; border:0; border-radius:0; overflow:visible; }
+.studentNode svg { height:150px; }
+.partArt { height:155px; }
+.partArt>div { min-height:0; height:100%; padding:8px; }
+.partArt>div>svg { height:90px; }
+.partArt :global(.feed-art) { max-height:90px; }
+.partArt nav button { font-size:10px; min-height:44px; min-width:44px; }
+.replayControls { display:flex; gap:8px; flex-wrap:wrap; padding:18px 0; }
+.replayControls button { color:#c7c4c6; background:transparent; border:1px solid #4b454a; padding:10px 16px; min-height:44px; border-radius:5px; font-size:14px; }
+.replayControls button[aria-pressed=true] { background:#eeece6; color:#28262a; }
+.studio :global(.generation-film .generation-facts) { min-width:0; }
+.studio :global(.generation-film .generation-facts h2) { font-size:27px; }
+.studio :global(.generation-film .generation-facts p) { color:inherit; }
+.studio :global(.approval-panel .check-row),.studio :global(.approval-panel>p) { font-size:14px; }
+.studio :global(.xray-active .preview-and-inspector) { align-items:flex-start; }
+@media(max-width:600px) { .flowJoin { height:45px; min-height:45px; transform:rotate(90deg); max-width:60px; margin:auto; } .routeViews svg { height:90px; } .studentNode svg { height:auto; } .partArt { height:180px; } }
+.productionStage { display:grid; grid-template-columns:minmax(0,1fr) 220px; gap:22px; align-items:start; }
+.canvasColumn { min-width:0; }
+.previewRoutes { padding:10px 0 0 20px; border-left:1px solid #29292925; color:#4d4948; font-size:13px; }
+.previewRoutes>span { font-size:10px; letter-spacing:.12em; }
+.previewRoutes>div { display:flex; flex-direction:column; gap:9px; margin-top:20px; }
+.previewRoutes>div>svg { width:24px; height:24px; color:#9e2530; }
+.previewRoutes strong { font-size:14px; }
+.previewRoutes small { font-size:12px; line-height:1.6; }
+.previewRoutes button { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:44px; padding:8px 10px; background:#f8f7f1; border:1px solid #cec9c0; border-radius:5px; text-align:left; color:#514b47; font-size:14px; }
+.previewRoutes button[aria-pressed=true] { border-color:#ad2833; color:#9d2630; }
+.previewRoutes p { margin-top:18px; font-size:12px; }
+.previewRoutes .preservedCard { background:#ddd9d0; padding:15px; border-radius:5px; }
+.preservedCard p { margin:0; }
+.studio :global(.architect-layout) { grid-template-columns:minmax(0,1.4fr) minmax(240px,.6fr); }
+.studio :global(.prompt-panel) { background:#eeece6; color:#29272b; border:0; padding:32px; }
+.studio :global(.prompt-panel textarea),.studio :global(.prompt-panel input:not([type=checkbox])) { background:#faf9f4; color:#29272b; border:1px solid #cbc7be; }
+.studio :global(.prompt-panel .muted),.studio :global(.prompt-panel .mono),.studio :global(.prompt-panel .text-button),.studio :global(.prompt-panel .prompt-submit>span),.studio :global(.prompt-panel .check-row) { color:#625d57; }
+.studio :global(.prompt-panel .rules-badge) { color:#8c2931; border-color:#bca59f; font-size:11px; }
+.studio :global(.prompt-panel :focus-visible) { outline-color:#a62632; }
+.studio :global(.prompt-panel .section-heading) { flex-wrap:wrap; }
+@media(max-width:1200px) { .productionStage { grid-template-columns:minmax(0,1fr) 175px; gap:14px; } }
+@media(max-width:1000px) { .productionStage { grid-template-columns:1fr; } .previewRoutes { display:grid; grid-template-columns:1fr 1fr; gap:15px; border-left:0; border-top:1px solid #29292925; padding:15px 0 0; } .previewRoutes>span { grid-column:1/-1; } .previewRoutes>div { margin-top:0; } .studio :global(.architect-layout) { grid-template-columns:1fr; } }
+@media(min-width:1001px) { .studio :global(.xray-active) .productionStage { grid-template-columns:1fr; } .studio :global(.xray-active) .previewRoutes { display:none; } }
+@media(max-width:600px) { .previewRoutes { grid-template-columns:1fr; } .studio :global(.prompt-panel) { padding:22px; } }
+.landing :global(.optic-object) { transform-style:flat; }
+.landing :global(.optic-topology) { position:relative; z-index:3; height:245px; }
+.landing :global(.optic-monitor) { z-index:2; }
+.groundingVisual { background:#eeece6; color:#29282c; padding:30px; border-radius:8px; }
+.groundingVisual>svg { width:48px; height:48px; color:#a52732; display:block; margin-bottom:12px; }
+.groundingVisual>strong { font-size:23px; }
+.groundingVisual>div { display:flex; gap:15px; margin:25px 0; }
+.groundingVisual article { min-width:0; flex:1; }
+.groundingVisual article svg { width:100%; height:auto; }
+.groundingVisual article strong { font-size:15px; display:block; margin-top:12px; }
+.assemblyViewer>p { padding-top:15px; }
+.assemblyViewer>.selectorExample { display:block; min-height:0; }
+/* Override V3's projector height cap so the production canvas owns the stage. */
+.studio :global(main[data-stage=preview] .main-feed) { max-height:none; aspect-ratio:16/9; }
+.partArt .exampleFeed { height:70px; }
+.partArt .composedExample>svg { height:70px; }
+.partArt .composedExample>div svg { height:30px; }
+.partArt .statusExample>svg { height:90px; }
+.partArt .statusExample>p { padding:7px; margin:0; font-size:12px; }
+@media(max-width:600px) { .studio :global(main[data-stage=preview] .main-feed) { aspect-ratio:16/11; } }
+
+.composedExample { color:#29282c; }
