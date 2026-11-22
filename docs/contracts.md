@@ -1,4 +1,4 @@
-# Canon DNA bootstrap contracts
+# Canon DNA engine contracts
 
 Use Node.js 22.13+ on the 22 line, or Node.js 24+. Install the locked dependencies with `npm ci`, then use `npm run dev`. The root page is a placeholder for the studio. The scaffold uses the Next.js App Router and Tailwind's PostCSS integration. See [Next.js installation](https://nextjs.org/docs/app/getting-started/installation) and [Tailwind's Next.js setup](https://tailwindcss.com/docs/installation/framework-guides/nextjs).
 
@@ -10,7 +10,7 @@ Use Node.js 22.13+ on the 22 line, or Node.js 24+. Install the locked dependenci
 | `@/data/sample-apps` | Read-only `sampleApps` array containing `classroom` and `remote-training`. |
 | `@/data/demo-prompts` | `lecturePrompt`, `labPrompt`, `hiddenViewPrompt`, `lectureRequirements`, `hiddenViewRequest`. |
 | `@/data/demo-apps` | `lectureApp` and `laboratoryApp`, validated draft fixtures. Treat both as read-only snapshots in the studio. |
-| `@/lib/engine` | Eight synchronous, browser-safe functions implementing `CanonDnaEngine`. |
+| `@/lib/engine` | Eight synchronous, browser-safe functions implementing `CanonDnaEngine`, plus `inspectApp`, `serializeApprovedRecipe`, and `deserializeApprovedRecipe`. |
 
 A `SampleApp` has `origin: "team-created"`, an entry file, components and directed `Dependency` edges. An edge `{ from, to }` means the component identified by `from` depends on the component identified by `to`. File paths are repository-relative TSX paths for inspection and provenance. The sample entries export the React components `Classroom` and `RemoteTraining`.
 
@@ -23,20 +23,20 @@ A `GeneratedApp` includes source topology, modes, scenes, permissions, lineage, 
 
 Both roles have `select-view`, `change-layout` and `fullscreen`. Professor also has `camera-ptz` and `switch-mode`. PTZ is a permission in the design. Sample media and controls are simulated. All Camera, Hub and Edge mappings carry `status: "proposed"` and `verified: false`.
 
-A `Lineage` entry supplies the component ID, reason, dependency IDs, proposed AMLOS layers and items for engineering verification. Reuse and adaptation entries also supply a sample project ID and source path. A new component has its own ID and rationale.
+A `Lineage` entry supplies the component ID, reason, dependency IDs, proposed AMLOS layers and items for engineering verification. Reuse and adaptation entries also supply a sample project ID and source path. A new component has its own ID and rationale. When present, capabilities come from the matched manifest or describe the new design. The optional `appliesTo` metadata references modes and sources in the generated recipe. Dependencies on a sample-backed entry are scoped to its source manifest.
 
 ## Engine behavior
 
-| Function | Input and output | Bootstrap behavior |
+| Function | Input and output | Behavior |
 | --- | --- | --- |
-| `extractSampleDNA` | `(projectId: string) => SampleDNA \| undefined` | Returns a cloned manifest with `method: "manifest-backed"`. An unknown ID returns `undefined`. |
-| `interpretRequirements` | `(text: string, structured?: Requirements) => InterpretationResult` | Validates an explicit structured request or recognizes the supplied demo strings with casing and surrounding whitespace ignored. Returns `ok: false` and a message for unsupported input. The mode is always `rules-demo`. |
-| `matchReusableComponents` | `(requirements: Requirements, library: readonly SampleApp[]) => Lineage[]` | Grounds lecture reuse and adaptation in the supplied classroom manifest. Laboratory emits the new Workbench decision. Coverage emits an empty array. |
+| `extractSampleDNA` | `(projectId: string) => SampleDNA \| undefined` | Returns a validated, independent manifest snapshot with `method: "manifest-backed"`. An unknown ID returns `undefined`. |
+| `interpretRequirements` | `(text: string, structured?: Requirements) => InterpretationResult` | Validates an explicit structured request or recognizes supported classroom, Workbench and coverage paraphrases by their requirements. In free text the classroom uses the demo institution and title defaults. Returns `ok: false` and a message for unsupported input. The mode is always `rules-demo`. |
+| `matchReusableComponents` | `(requirements: Requirements, library: readonly SampleApp[]) => Lineage[]` | Matches declared capabilities from both supplied team-created manifests. Lecture includes a new source topology decision. Laboratory adapts the remote training demonstration label when available and adds a new Workbench capture decision. Coverage emits an empty array. |
 | `buildLectureApp` | `(requirements: LectureRequirements, matches: readonly Lineage[]) => GeneratedApp` | Builds the fixed lecture topology with the supplied institution, title and lineage. |
-| `applyLabRequirement` | `(before: GeneratedApp, text: string) => GeneratedApp` | Accepts the supplied lab prompt and returns an independent validated snapshot. A new lab mode resets approval to draft. Reapplying it to a config that already has Laboratory returns a validated copy. Unsupported text throws an error. |
-| `diffApps` | `(before: GeneratedApp, after: GeneratedApp) => AppDiff` | Reports added, removed, changed or preserved entities by ID. Scene IDs in the diff are prefixed with the mode ID and a hyphen. A mode includes its scenes. Application entries cover top-level metadata. |
+| `applyLabRequirement` | `(before: GeneratedApp, text: string) => GeneratedApp` | Accepts supported lab wording and returns an independent validated snapshot. A new lab mode resets approval to draft. Reapplying it to a config that already has Laboratory returns a validated copy. Unsupported text throws an error. |
+| `diffApps` | `(before: GeneratedApp, after: GeneratedApp) => AppDiff` | Reports added, removed, changed or preserved entities by ID. Scene IDs in the diff are prefixed with the mode ID and a hyphen. A mode includes its scenes. Application entries cover top-level metadata. Changed entries include before/after values and top-level changed fields. Role permissions compare as sorted lists. |
 | `validateCoverage` | `(request: CoverageRequest) => ValidationResult` | Uses the provided line-of-sight fact. Missing sight produces a review-required issue with code `no-line-of-sight`. |
-| `composeBlueprint` | `(app: GeneratedApp) => Blueprint` | Returns the validated app snapshot and the engineering signoff checklist. |
+| `composeBlueprint` | `(app: GeneratedApp) => Blueprint` | Returns the validated app snapshot, camera-to-view topology, digital source IDs, actionable findings and the engineering signoff checklist. |
 
 ## Complete demo flow
 
@@ -48,7 +48,7 @@ import { sampleApps } from "@/data/sample-apps";
 import {
   applyLabRequirement, buildLectureApp, composeBlueprint, diffApps,
   extractSampleDNA, interpretRequirements, matchReusableComponents,
-  validateCoverage,
+  serializeApprovedRecipe, validateCoverage,
 } from "@/lib/engine";
 import { approvedRecipeSchema, type GeneratedApp } from "@/types/canon-dna";
 
@@ -97,11 +97,12 @@ export function approveDemo(app: GeneratedApp, approvedBy: string) {
   });
 
   // Browser-side storage is owned by the studio.
-  const serialized = JSON.stringify(recipe);
-  return approvedRecipeSchema.parse(JSON.parse(serialized));
+  return serializeApprovedRecipe(recipe);
 }
 ```
 
 To supply structured requirements from a form, call `interpretRequirements("", { kind: "lecture", institution: "Example University", title: "University Classroom" })`. The other supported discriminants are `{ kind: "laboratory" }` and `{ kind: "coverage", viewLabel: "Hidden side of workbench", hasLineOfSight: false }`.
 
-Phase 1 uses manifest reads, fixed demo rules and in-memory data. General interpretation, broader component matching, persistent library state, media playback and interactive studio screens are follow-on work.
+`inspectApp(input)` returns schema failures with paths for invalid inputs. Valid drafts can still require review of assumptions, component provenance, proposed mappings and human signoff. `deserializeApprovedRecipe(serialized)` validates the stored recipe on read. Both persistence helpers throw on invalid input. Approval records engineering signoff on the design and leaves the mappings proposed and unverified.
+
+The rules cover the demo scenarios. Use structured input to supply classroom institution and title or a known camera coverage fact. The engine runs offline and reports `rules-demo` for every interpretation.
