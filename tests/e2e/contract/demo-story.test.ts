@@ -123,7 +123,6 @@ describe("QA · Architect (stage C)", () => {
 
   it("produces REUSE and ADAPT decisions grounded in the classroom sample, each with a reason", () => {
     const { matches } = runDemoFlow();
-    const classroom = sampleApps.find(({ id }) => id === "classroom");
     expect(matches.map(({ componentId, kind }) => ({ componentId, kind }))).toEqual(
       expect.arrayContaining([
         { componentId: "source-selector", kind: "reuse" },

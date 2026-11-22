@@ -44,13 +44,15 @@ export async function expectNoHorizontalOverflow(page: Page, where: string) {
 
 /** Library → Analyze → Architect → Generate (lecture). Leaves the page in Preview, ready for role/view checks. */
 export async function reachLecturePreview(page: Page) {
-  await page.goto("/");
+  await page.goto("/studio");
   await page.getByTestId(tid.analyzeButton("classroom")).click();
   await expect(page.getByTestId(tid.graphNode("source-selector"))).toBeVisible();
   await page.getByTestId(tid.stageNav("architect")).click();
   await expect(page.getByTestId(tid.requirementInput)).toHaveValue(new RegExp(`^\\s*${escapeRegex(lecturePrompt)}\\s*$`, "i"));
   await page.getByTestId(tid.generateButton).click();
+  await page.locator(".reuse-review summary").click();
   await expect(page.getByTestId(tid.reuseDecision("source-selector"))).toBeVisible();
+  await page.locator(".reuse-review summary").click();
   await page.getByTestId(tid.stageNav("preview")).click();
 }
 
@@ -58,19 +60,15 @@ export async function applyLabChange(page: Page) {
   const input = page.getByTestId(tid.changeInput);
   if ((await input.inputValue()).trim().toLowerCase() !== labPrompt.toLowerCase()) await input.fill(labPrompt);
   await page.getByTestId(tid.applyChangeButton).click();
-  // Whether the UI auto-switches to Laboratory is undecided, so select it explicitly (harmless if already active).
+  // Exercise the permission-controlled mode selector explicitly.
   await switchMode(page, "laboratory");
   await expect(page.getByTestId(tid.viewTile("workbench"))).toBeVisible();
 }
 
-/**
- * `switch-mode` is a PROFESSOR permission in the contract. Students can't switch modes, so we
- * switch as Professor and return to Student. OPEN QUESTION for UI: is there a separate
- * operator-level mode control outside the role preview? If so, use it here instead.
- */
+/** Mode changes require Professor permission; return to Student after setting the mode. */
 export async function switchMode(page: Page, mode: "lecture" | "laboratory") {
   await page.getByTestId(tid.roleSwitch("professor")).click();
-  await page.getByTestId(tid.modeSwitch(mode)).click();
+  await page.getByTestId("session-mode").selectOption(mode);
   await page.getByTestId(tid.roleSwitch("student")).click();
 }
 

@@ -1,0 +1,105 @@
+import { expect, test } from "@playwright/test";
+import { guardPage, expectNoHorizontalOverflow, reachLecturePreview, applyLabChange } from "./helpers";
+
+test("V5 workshop compares real selector and demonstration label without inventing camera code", async ({ page, baseURL }) => {
+  const guard = await guardPage(page, baseURL!);
+  await page.goto("/studio");
+  await page.getByTestId("analyze-dna-classroom").click();
+  await page.getByTestId("dna-node-source-selector").click();
+  const workshop = page.getByRole("region", { name: "Before and after reuse workshop" });
+  await expect(workshop).toContainText("The old selector accepts a list of views");
+  const examples = workshop.getByRole("navigation", { name: "Simulated views" });
+  await expect(examples.nth(0).getByRole("button")).toHaveCount(3);
+  await expect(examples.nth(1).getByRole("button")).toHaveCount(4);
+  await examples.nth(1).getByRole("button", { name: "Workbench" }).click();
+  await expect(examples.nth(1).getByRole("button", { name: "Workbench" })).toHaveAttribute("aria-pressed", "true");
+  await workshop.getByText("Technical details · where it came from", { exact: true }).click();
+  await expect(page.getByTestId("inspector-source-path")).toHaveText("src/sample-apps/classroom/SourceSelector.tsx");
+  await page.getByTestId("dna-node-demonstration-view").click();
+  await expect(workshop).toContainText("it does not supply a camera");
+  await expect(workshop).toContainText("Workbench demonstration");
+  await workshop.getByText("Technical details · where it came from", { exact: true }).click();
+  await expect(page.getByTestId("inspector-source-path")).toHaveText("src/sample-apps/remote-training/DemonstrationView.tsx");
+  await page.getByTestId("dna-node-workbench-view").click();
+  await expect(workshop).toContainText("No existing hardware component");
+  await expect(workshop).toContainText("placement and line of sight");
+  await expect(page.getByTestId("inspector-source-path")).not.toContainText("src/sample-apps/");
+  await expectNoHorizontalOverflow(page, "V5 workshop");
+  guard.assertClean();
+});
+
+test("V5 replay presents actual recipe decisions and lets the reviewer choose each act", async ({ page, baseURL }) => {
+  const guard = await guardPage(page, baseURL!);
+  await reachLecturePreview(page);
+  await page.getByTestId("stage-nav-architect").click();
+  await page.getByRole("button", { name: "Replay design assembly" }).click();
+  const film = page.getByTestId("generation-sequence");
+  await film.getByRole("button", { name: "Reuse decisions", exact: true }).click();
+  await expect(film).toContainText("src/sample-apps/classroom/SourceSelector.tsx");
+  await expect(film).toContainText("Student → view selection, no PTZ");
+  await film.getByRole("button", { name: "Composed design", exact: true }).click();
+  await expect(film.getByRole("heading", { name: "One composed application." })).toBeVisible();
+  await film.getByRole("button", { name: "Grounded facts", exact: true }).click();
+  await expect(film).toContainText("1 classroom camera → Professor + Whiteboard");
+  await film.getByRole("button", { name: "Skip animation" }).click();
+  await expect(page.locator('[data-testid^="view-tile-"]')).toHaveCount(3);
+  guard.assertClean();
+});
+
+test("V5 topology selection explains digital routing and preserves real signoff validation", async ({ page, baseURL }) => {
+  const guard = await guardPage(page, baseURL!);
+  await reachLecturePreview(page);
+  await applyLabChange(page);
+  await page.getByTestId("xray-toggle").click();
+  await page.getByTestId("view-tile-workbench").click();
+  await expect(page.getByTestId("inspector-panel")).toContainText("New requirement");
+  await page.keyboard.press("Escape");
+  await page.getByTestId("stage-nav-blueprint").click();
+  const diagram = page.getByRole("region", { name: "Proposed AMLOS topology" });
+  await diagram.getByRole("button", { name: /Slides Digital source/ }).click();
+  await expect(diagram).toContainText("Slides enters Hub independently, without a physical camera");
+  await page.getByTestId("topology-node-hub").click();
+  await expect(diagram).toContainText("Aggregate and distribute the processed views and digital media.");
+  await diagram.getByRole("button", { name: /Workbench camera Physical source/ }).click();
+  await expect(diagram).toContainText("Verify camera position and clear line of sight");
+  const approve = page.getByTestId("approve-design");
+  await expect(approve).toBeDisabled();
+  await page.getByRole("textbox", { name: "Reviewing engineer" }).fill("V5 Review");
+  await expect(approve).toBeDisabled();
+  const boxes = page.getByTestId("signoff-checklist").getByRole("checkbox");
+  for (const box of await boxes.all()) await box.check();
+  await expect(approve).toBeEnabled();
+  await boxes.first().uncheck();
+  await expect(approve).toBeDisabled();
+  await expectNoHorizontalOverflow(page, "V5 topology");
+  await page.getByRole("button", { name: "Request changes", exact: true }).click();
+  await expect(page.getByTestId("architect-input")).toBeVisible();
+  await page.getByTestId("stage-nav-preview").click();
+  await expect(page.locator('[data-testid^="view-tile-"]')).toHaveCount(4);
+  guard.assertClean();
+});
+
+test("V5 structured brief, simulated controls and invalid lab input retain validated state", async ({ page, baseURL }) => {
+  const guard = await guardPage(page, baseURL!);
+  await page.goto("/studio?stage=architect");
+  await page.getByRole("checkbox", { name: "Use structured lecture requirements" }).check();
+  await page.getByRole("textbox", { name: "Institution", exact: true }).fill("V5 University");
+  await page.getByRole("textbox", { name: "Application name", exact: true }).fill("Engineering Studio");
+  await page.getByTestId("architect-generate").click();
+  await expect(page.locator(".university-brand")).toContainText("V5 University");
+  await expect(page.locator(".university-brand")).toContainText("Engineering Studio");
+  await page.getByTestId("role-professor").click();
+  await page.getByRole("button", { name: "Pan camera right", exact: true }).click();
+  await page.getByRole("button", { name: "Zoom camera in", exact: true }).click();
+  await expect(page.locator(".feed-transform")).toHaveAttribute("style", /scale\(1\.1\).*translateX\(10px\)/);
+  await page.getByRole("button", { name: "Reset", exact: true }).click();
+  await expect(page.locator(".feed-transform")).toHaveAttribute("style", /scale\(1\).*translateX\(0px\)/);
+  await page.getByTestId("role-student").click();
+  await expect(page.getByTestId("ptz-control")).toHaveCount(0);
+  await page.getByTestId("change-request-input").fill("Install an unrecognized telescope");
+  await page.getByTestId("change-request-apply").click();
+  await expect(page.getByTestId("architect-error")).toContainText("Describe adding a camera");
+  await expect(page.locator('[data-testid^="view-tile-"]')).toHaveCount(3);
+  guard.assertClean();
+});
+
