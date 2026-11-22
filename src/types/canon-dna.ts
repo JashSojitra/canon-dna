@@ -31,7 +31,13 @@ export const sampleAppSchema = z.object({
   if (!app.components.some((component) => component.sourceFile === app.entryFile)) {
     ctx.addIssue({ code: "custom", path: ["entryFile"], message: "Entry file must be a manifest component" });
   }
+  const edges = new Set<string>();
   app.dependencies.forEach(({ from, to }, index) => {
+    const key = `${from}:${to}`;
+    if (edges.has(key)) {
+      ctx.addIssue({ code: "custom", path: ["dependencies", index], message: "Dependency edges must be unique" });
+    }
+    edges.add(key);
     if (from === to || !ids.has(from) || !ids.has(to)) {
       ctx.addIssue({ code: "custom", path: ["dependencies", index], message: "Dependency must link two distinct manifest components" });
     }
@@ -69,6 +75,11 @@ const lineage = z.object({
   reason: label,
   proposedAmlosLayers: z.array(amlosLayerSchema),
   verificationRequired: z.array(label),
+  capabilities: uniqueIds.optional(),
+  appliesTo: z.object({
+    modeIds: z.array(modeIdSchema),
+    sourceIds: uniqueIds,
+  }).optional(),
 });
 export const lineageSchema = z.discriminatedUnion("kind", [
   lineage.extend({ kind: z.literal("reuse"), sampleProjectId: id, sourceFile: sourcePath }),
@@ -95,6 +106,12 @@ export const generatedAppSchema = z.object({
   if (sources.size !== app.sources.length) {
     ctx.addIssue({ code: "custom", path: ["sources"], message: "Source IDs must be unique" });
   }
+  app.lineage.forEach(({ appliesTo }, index) => {
+    if (appliesTo && (appliesTo.sourceIds.some((sourceId) => !sources.has(sourceId))
+      || appliesTo.modeIds.some((modeId) => !app.modes[modeId]))) {
+      ctx.addIssue({ code: "custom", path: ["lineage", index, "appliesTo"], message: "Lineage targets must exist in the application" });
+    }
+  });
   app.sources.forEach((entry, index) => {
     if (entry.kind === "processed-view" && sources.get(entry.physicalCameraId)?.kind !== "physical-camera") {
       ctx.addIssue({ code: "custom", path: ["sources", index, "physicalCameraId"], message: "Processed views require an existing physical camera" });
@@ -137,15 +154,30 @@ export const appDiffSchema = z.array(z.object({
   entity: z.enum(["source", "mode", "scene", "role", "lineage", "application"]),
   id,
   change: z.enum(["added", "removed", "changed", "preserved"]),
+  changedFields: z.array(z.string()).optional(),
+  before: z.json().optional(),
+  after: z.json().optional(),
 }));
 export const validationResultSchema = z.object({
   valid: z.boolean(),
   reviewRequired: z.boolean(),
-  issues: z.array(z.object({ code: id, message: label, suggestion: label.optional() })),
+  issues: z.array(z.object({
+    code: id,
+    message: label,
+    suggestion: label.optional(),
+    path: z.string().optional(),
+    componentId: id.optional(),
+    layer: amlosLayerSchema.optional(),
+  })),
 });
 export const blueprintSchema = z.object({
   app: generatedAppSchema,
   signoffChecklist: z.array(label),
+  sourceTopology: z.object({
+    cameras: z.array(z.object({ cameraId: id, processedViewIds: uniqueIds })),
+    digitalSourceIds: uniqueIds,
+  }).optional(),
+  review: validationResultSchema.optional(),
 });
 export const approvedRecipeSchema = z.object({
   id,
